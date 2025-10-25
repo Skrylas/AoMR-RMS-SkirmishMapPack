@@ -17,15 +17,15 @@ void generateTriggers()
    rmTriggerAddScriptLine("runImmediately");
    rmTriggerAddScriptLine("{");
 //   rmTriggerAddScriptLine("      trRenderSky(true, \"Dream\", 0, 0, false);");
-   rmTriggerAddScriptLine("      trLightingSetParamBool(31, true);");
+/*   rmTriggerAddScriptLine("      trLightingSetParamBool(31, true);");
    rmTriggerAddScriptLine("      trLightingSetParamFloat(15, 1.5);");
    rmTriggerAddScriptLine("      trLightingSetParamFloat(9, 1.2);");
    rmTriggerAddScriptLine("      trLightingSetParamFloat(10, 0.6);");
-   rmTriggerAddScriptLine("      trLightingSetParamFloat(11, 2.5);");
-   rmTriggerAddScriptLine("      trLightingSetParamFloat(14, 0.25);");
+   rmTriggerAddScriptLine("      trLightingSetParamFloat(11, 2.5);");*/
+   rmTriggerAddScriptLine("      trLightingSetParamFloat(14, 0.50);");
    rmTriggerAddScriptLine("      trLightingSetParamColorAttr(47, 1.3, 1.3, 1.3);");
    rmTriggerAddScriptLine("      trLightingSetParamColor(35, 55, 1, 55);");
-   rmTriggerAddScriptLine("      trLightingSetParamFloat(36, 0.2);");
+   rmTriggerAddScriptLine("      trLightingSetParamFloat(36, 1.0);");
    rmTriggerAddScriptLine("      trLightingSetParamFloat(34, 0.0);");
    rmTriggerAddScriptLine("      trLightingSetParamFloat(32, 6.0);");
    rmTriggerAddScriptLine("      trLightingSetParamFloat(33, 0.0);");
@@ -604,24 +604,24 @@ int startingTowerID = rmObjectDefCreate("starting tower");
    int orchidID = rmObjectDefCreate("orchid");
    rmObjectDefAddItem(orchidID, cUnitTypeOrchid, 1);
    rmObjectDefAddConstraint(orchidID, vDefaultEmbellishmentAvoidAll);
-   rmObjectDefPlaceAnywhere(orchidID, 0, 40 * cNumberPlayers * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(orchidID, 0, 30 * cNumberPlayers * getMapAreaSizeFactor());
 
    int flowerID = rmObjectDefCreate("flower");
    rmObjectDefAddItem(flowerID, cUnitTypeMeadowFlower, 1);
 //   rmObjectDefAddConstraint(flowerID, vDefaultEmbellishmentAvoidAll);
-   rmObjectDefPlaceAnywhere(flowerID, 0, 30 * cNumberPlayers * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(flowerID, 0, 20 * cNumberPlayers * getMapAreaSizeFactor());
 
    int flowersID = rmObjectDefCreate("flowers");
    rmObjectDefAddItem(flowersID, cUnitTypeFlowers, 1);
 //   rmObjectDefAddConstraint(flowersID, vDefaultEmbellishmentAvoidAll);
-   rmObjectDefPlaceAnywhere(flowersID, 0, 30 * cNumberPlayers * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(flowersID, 0, 20 * cNumberPlayers * getMapAreaSizeFactor());
 
    int flowersGroupID = rmObjectDefCreate("flowers group");
    rmObjectDefAddItem(flowersGroupID, cUnitTypeFlowers, 3, 2.0);
    rmObjectDefAddConstraint(flowersGroupID, vDefaultEmbellishmentAvoidAll);
    rmObjectDefAddConstraint(flowersGroupID, vDefaultAvoidSettlementRange);
    rmObjectDefAddConstraint(flowersGroupID, vDefaultAvoidEdge);   
-   rmObjectDefPlaceAnywhere(flowersGroupID, 0, 20 * cNumberPlayers * getMapAreaSizeFactor());   
+   rmObjectDefPlaceAnywhere(flowersGroupID, 0, 10 * cNumberPlayers * getMapAreaSizeFactor());   
 
    int glow1 = rmObjectDefCreate("river glow");
    rmObjectDefAddItem(glow1, cUnitTypeTreeChinesePineDead, 1);
@@ -640,7 +640,7 @@ int startingTowerID = rmObjectDefCreate("starting tower");
    rmObjectDefAddConstraint(logID, vDefaultEmbellishmentAvoidAll);
    rmObjectDefAddConstraint(logID, vDefaultAvoidSettlementRange);
    rmObjectDefAddConstraint(logID, vDefaultAvoidEdge);   
-   rmObjectDefPlaceAnywhere(logID, 0, 10 * cNumberPlayers * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(logID, 0, 5 * cNumberPlayers * getMapAreaSizeFactor());
 
    int logGroupID = rmObjectDefCreate("log group");
    rmObjectDefAddItem(logGroupID, cUnitTypeRottingLog, 2, 2.0);

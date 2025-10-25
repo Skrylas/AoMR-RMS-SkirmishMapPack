@@ -86,7 +86,6 @@ void generate()
    rmCustomMixAddPaintEntry(baseMixID, cTerrainHadesDirtRocks2, 3.0);
    rmCustomMixAddPaintEntry(baseMixID, cTerrainChineseHellDirt, 1.0);
    rmCustomMixAddPaintEntry(baseMixID, cTerrainChineseHellDirtRocks, 2.0);
-   rmCustomMixAddPaintEntry(baseMixID, cTerrainHadesCracked1, 2.0);
 
    int cliffMixID = rmCustomMixCreate();
    rmCustomMixSetPaintParams(cliffMixID, cNoiseFractalSum, 0.075, 5, 0.5);
