@@ -1,0 +1,9 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Mystic Grove"
+    detailsText = "Players find themselves lost in a peaceful and serene enchanted grove surrounded by trees."
+    loadDetails="A peaceful and serene enchanted grove, soon to be ravaged by battle."
+    imagepath = "resources\maps\map_picker\mystic_grove.png"
+    loadBackground="resources\maps\previews\mystic_grove.png"
+    landmap="">
+</mapinfo>

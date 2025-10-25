@@ -1,0 +1,9 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Deep Mines"
+    detailsText = "Deep in the Dwarven Mines of the Norselands lies gold and hidden treasure.  Raid the abandoned Forges for bonus gold, and play on Regicide mode to feature a custom Regent, the Fire King, Halogi."
+    loadDetails="Raid the abandoned Forges for bonus gold, and play on Regicide mode to feature a custom Regent, the Fire King, Halogi."
+    imagepath = "resources\maps\map_picker\deep_mines.png"
+    loadBackground="resources\maps\previews\deep_mines.png"
+    landmap="">
+</mapinfo>

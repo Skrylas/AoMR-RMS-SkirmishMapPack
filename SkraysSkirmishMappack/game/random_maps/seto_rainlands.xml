@@ -1,0 +1,9 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Seto Rainlands"
+    detailsText = "Shallow currents of water run through the map, bringing opportunities for fish and naval combat, while still allowing your armies to traverse on foot.  Play on Regicide mode for a custom Regent, Abe-no-Seimei."
+    loadDetails="Take control of the shallow waters through a combination of men, myth and ships.  Play on Regicide Mode for a custom regent, Abe-no-Seimei."
+    imagepath = "resources\maps\map_picker\seto_rainlands.png"
+    loadBackground="resources\maps\previews\seto_rainlands.png"
+    landmap="">
+</mapinfo>

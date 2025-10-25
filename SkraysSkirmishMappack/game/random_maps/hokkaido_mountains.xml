@@ -1,0 +1,9 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Hokkaido Mountains"
+    detailsText = "This mountainous map features many random cliffs that cut through the landscape creating defensive opportunities and a more random layout.  Play on Regicide mode for a custom Regent, Yuki-onna."
+    loadDetails="Navigate through the many random snow covered cliffs to defeat your opponents.  Play on Regicide mode for a custom Regent, Yuki-onna."
+    imagepath = "resources\maps\map_picker\hokkaido_mountains.png"
+    loadBackground="resources\maps\previews\hokkaido_mountains.png"
+    landmap="">
+</mapinfo>
