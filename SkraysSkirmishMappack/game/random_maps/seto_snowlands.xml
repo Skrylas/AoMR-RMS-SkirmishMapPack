@@ -1,0 +1,9 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Seto Rainlands (Frozen)"
+    detailsText = "Frozen rivers run through the map, forcing players to group their bases on the snow covered islands.  Play on Regicide mode for a custom Regent, Abe-no-Seimei."
+    loadDetails="Frozen rivers run through the map, forcing players to group their bases on the snow covered islands.  Play on Regicide Mode for a custom regent, Abe-no-Seimei."
+    imagepath = "resources\maps\map_picker\seto_snowlands.png"
+    loadBackground="resources\maps\previews\seto_snowlands.png"
+    landmap="">
+</mapinfo>

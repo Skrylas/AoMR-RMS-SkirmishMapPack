@@ -3,14 +3,25 @@ include "lib2/rm_core.xs";
 void generateTriggers()
 {
    rmTriggerAddScriptLine("const string cCRegent = \"YukiOnna\";");
+   rmTriggerAddScriptLine("const string cCKOTH = \"Snowman\";");
 
-   rmTriggerAddScriptLine("rule _regentStats");
+   rmTriggerAddScriptLine("rule _weatherVFX");
    rmTriggerAddScriptLine("highFrequency");
-   rmTriggerAddScriptLine("inactive");
-   rmTriggerAddScriptLine("runImmediately");
+   rmTriggerAddScriptLine("active");
    rmTriggerAddScriptLine("{");
+//   rmTriggerAddScriptLine("      trRenderRain(5);");
+   rmTriggerAddScriptLine("      trRenderSnow(100);");
+   rmTriggerAddScriptLine("   xsDisableSelf();");
+   rmTriggerAddScriptLine("}");  
 
-   rmTriggerAddScriptLine("      for(int p = 1; p <= cNumberPlayers; p++){");
+   rmTriggerAddScriptLine("rule _ifRegicide");
+   rmTriggerAddScriptLine("minInterval 2");
+   rmTriggerAddScriptLine("active");
+   rmTriggerAddScriptLine("{");
+   rmTriggerAddScriptLine("   if ((kbUnitTypeCount(\"Regent\", 1, cUnitStateAlive) >= 1))");
+   rmTriggerAddScriptLine("   {");
+   rmTriggerAddScriptLine("   for(int p = 1; p <= cNumberPlayers; p++){");
+   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(p, \"Regent\", cCRegent, true);");
    rmTriggerAddScriptLine("      trProtoUnitChangeName(cCRegent, p, \"\", \"{STR_UNIT_REGENT_LR}\", \"{STR_UNIT_REGENT_SR}\");");
    rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 6, 0, 1);"); //population count
 //   rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 12, 30, 1);"); //max shield
@@ -26,24 +37,12 @@ void generateTriggers()
    rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeLandMilitary\", false);");
    rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeFindMilitaryHero\", false);");
    rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeValidBoltTarget\", false);");
+   rmTriggerAddScriptLine("      trModifyProtounitAction(cCRegent, \"HandAttack\", p, 13, 6, 1);");
 //   rmTriggerAddScriptLine("      trModifyProtounitAction(cCRegent, \"RangedAttack\", p, 15, 10, 1);");
-//  rmTriggerAddScriptLine("      trModifyProtounitAction(cCRegent, \"RangedAttack\", p, 16, 5, 1);");
-   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCRegent, \"KnockoutDeath\", false);");
+//   rmTriggerAddScriptLine("      trModifyProtounitAction(cCRegent, \"RangedAttack\", p, 16, 5, 1);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCRegent, \"KnockoutDeath\", false);");   
    rmTriggerAddScriptLine("      }");
-   rmTriggerAddScriptLine("      xsDisableSelf();");
-   rmTriggerAddScriptLine("}");
-
-   rmTriggerAddScriptLine("rule _ifRegicide");
-   rmTriggerAddScriptLine("minInterval 2");
-   rmTriggerAddScriptLine("active");
-   rmTriggerAddScriptLine("{");
-   rmTriggerAddScriptLine("   if ((kbUnitTypeCount(\"Regent\", 1, cUnitStateAlive) >= 1))");
-   rmTriggerAddScriptLine("   {");
-   rmTriggerAddScriptLine("   for(int p = 1; p <= cNumberPlayers; p++){");
-   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(p, \"Regent\", cCRegent, true);");
-   rmTriggerAddScriptLine("   }");
    rmTriggerAddScriptLine("   xsEnableRule(\"_regicideCustomDefeat\");");
-   rmTriggerAddScriptLine("   xsEnableRule(\"_regentStats\");");   
    rmTriggerAddScriptLine("   }");
    rmTriggerAddScriptLine("   xsDisableSelf();");
    rmTriggerAddScriptLine("}");
@@ -67,6 +66,80 @@ void generateTriggers()
    rmTriggerAddScriptLine("      trEndGame();");
    rmTriggerAddScriptLine("      xsDisableSelf();");
    rmTriggerAddScriptLine("   }");
+   rmTriggerAddScriptLine("}");
+
+   rmTriggerAddScriptLine("rule _ifKOTH");
+   rmTriggerAddScriptLine("minInterval 2");
+   rmTriggerAddScriptLine("active");
+   rmTriggerAddScriptLine("{");
+   rmTriggerAddScriptLine("   if ((kbUnitTypeCount(\"PlentyVaultKOTH\", 0, cUnitStateAlive) >= 1))");
+   rmTriggerAddScriptLine("   {");
+   rmTriggerAddScriptLine("   for(int p = 0; p <= cNumberPlayers; p++){");
+//   rmTriggerAddScriptLine("      trProtoUnitChangeName(cCKOTH, p, \"\", \"{STR_BLD_PLENTY_VAULT_LR}\", \"{STR_BLD_PLENTY_VAULT_SR}\");");   
+   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCKOTH, \"EmbellishmentClass\", false);");   
+   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCKOTH, \"Building\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCKOTH, \"BuildingClass\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCKOTH, \"LogicalTypeCapturableBuilding\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"KBTracked\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"DeathTracked\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"Doppled\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"ForceToNature\", false);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"CollidesWithProjectiles\", false);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"NotDeleteable\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"Invulnerable\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"RevealFoundation\", true);");
+//   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"Selectable\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"NotCommandable\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"PlaySoundOnConversion\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"AnnounceConversion\", true);");   
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCKOTH, \"RevealFoundation\", true);");   
+   rmTriggerAddScriptLine("      trModifyProtounitData(cCKOTH, p, 23, 3.0, 1);");
+   rmTriggerAddScriptLine("      trModifyProtounitData(cCKOTH, p, 24, 3.0, 1);");
+   rmTriggerAddScriptLine("      trProtounitAssignAction(cCKOTH, \"PlentyVaultKOTH\", \"AutoConvert\", p);");
+   rmTriggerAddScriptLine("      trModifyProtounitData(\"PlentyVaultKOTH\", p, 23, 0.0, 1);");
+   rmTriggerAddScriptLine("      trModifyProtounitData(\"PlentyVaultKOTH\", p, 24, 0.0, 1);");   
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, \"PlentyVaultKOTH\", \"Collideable\", false);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, \"PlentyVaultKOTH\", \"OnlyInEditor\", true);");
+   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, \"PlentyVaultKOTH\", \"Doppled\", false);");   
+   rmTriggerAddScriptLine("   }");
+   rmTriggerAddScriptLine("   xsEnableRule(\"_scaleKOTH\");"); 
+   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"CinematicBlockArea\", cCKOTH, true);");   
+   rmTriggerAddScriptLine("      trProtounitAssignAction(cCKOTH, \"PlentyVaultKOTH\", \"AutoConvert\", 0);"); //Assign action to Gaia needs to be done after creation.
+   rmTriggerAddScriptLine("   }");
+   rmTriggerAddScriptLine("   xsDisableSelf();");
+   rmTriggerAddScriptLine("}");
+
+   rmTriggerAddScriptLine("rule _scaleKOTH");
+   rmTriggerAddScriptLine("minInterval 1");
+   rmTriggerAddScriptLine("inactive");
+   rmTriggerAddScriptLine("{");
+   rmTriggerAddScriptLine("   xsSetContextPlayer(0);");
+   rmTriggerAddScriptLine("   int kothQuery = kbUnitQueryCreate(\"kothQuery\");");
+   rmTriggerAddScriptLine("   kbUnitQuerySetPlayerID(kothQuery, 0);");
+   rmTriggerAddScriptLine("   kbUnitQuerySetUnitType(kothQuery, cUnitTypeSnowman);"); //Need to set RM Constant here
+   rmTriggerAddScriptLine("   kbUnitQuerySetState(kothQuery, cUnitStateAlive);");
+    
+   rmTriggerAddScriptLine("   int numResults = kbUnitQueryExecute(kothQuery);");
+   rmTriggerAddScriptLine("   for (int i = 0; i < numResults; i++)");
+   rmTriggerAddScriptLine("   {");
+   rmTriggerAddScriptLine("      int unitID = kbUnitQueryGetResult(kothQuery, i);");
+   rmTriggerAddScriptLine("      trUnitSelectClear();");
+   rmTriggerAddScriptLine("      trUnitSelectByID(unitID);");
+   rmTriggerAddScriptLine("      trUnitSetScale(4.5, 4.5, 4.5);");
+   rmTriggerAddScriptLine("   }");
+   rmTriggerAddScriptLine("   kbUnitQueryDestroy(kothQuery);");
+   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"ShadePredator\", \"FrostGiant\", true);");
+   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"ShadePredator\", \"FrostGiant\", true);");
+   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"ShadePredator\", \"FrostGiant\", true);");
+   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"ShadePredator\", \"FrostGiant\", true);");
+   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"ShadePredator\", \"FrostGiant\", true);");
+   rmTriggerAddScriptLine("      trModifyProtounitData(\"FrostGiant\", 0, 0, 120, 1);");
+   rmTriggerAddScriptLine("      trModifyProtounitData(\"FrostGiant\", 0, 13, 0.35, 1);");
+   rmTriggerAddScriptLine("      trModifyProtounitData(\"FrostGiant\", 0, 14, 0.35, 1);");
+   rmTriggerAddScriptLine("      trModifyProtounitAction(\"FrostGiant\", \"HandAttack\", 0, 13, 10, 1);");
+   rmTriggerAddScriptLine("      trModifyProtounitAction(\"FrostGiant\", \"HandAttack\", 0, 15, 4, 1);");
+   rmTriggerAddScriptLine("      trProtounitActionSpecialEffectDuration(\"FrostGiant\", \"FreezeAttack\", 0, 7, \"All\", -1, 5, 1);");   
+   rmTriggerAddScriptLine("   xsDisableSelf();");
    rmTriggerAddScriptLine("}");
 
 }
@@ -131,6 +204,12 @@ void generate()
 
    // KotH.
    placeKotHObjects();
+   if (gameIsKotH() == true)
+   {
+         int kothID = rmObjectCreate("block");
+         rmObjectAddItem(kothID, cUnitTypeCinematicBlockArea);
+         rmObjectPlaceAtLoc(kothID, 0, cCenterLoc);
+   }   
 
    // Lighting.
    rmSetLighting(cLightingSetRmTundra01);
@@ -597,9 +676,9 @@ void generate()
    rmObjectDefAddItem(snowID, cUnitTypeVFXSnow, 1);
    rmObjectDefPlaceAnywhere(snowID, 0, 2);
 
-   int snowBlizzID = rmObjectDefCreate("snow blizzard");
+/*   int snowBlizzID = rmObjectDefCreate("snow blizzard");
    rmObjectDefAddItem(snowBlizzID, cUnitTypeVFXSnowBlizzard, 1);
-   rmObjectDefPlaceAnywhere(snowBlizzID, 0, 1);
+   rmObjectDefPlaceAnywhere(snowBlizzID, 0, 1);*/
 
    // Birbs.
    int birdID = rmObjectDefCreate("bird");
