@@ -2,9 +2,8 @@ include "lib2/rm_core.xs";
 
 void generateTriggers()
 {
-
    rmTriggerAddScriptLine("int gGateID = -1;");
-   rmTriggerAddScriptLine("const string cCRegent = \"AbeNoSeimei\";");
+   rmTriggerAddScriptLine("int gTitanID = -1;");
    rmTriggerAddScriptLine("const string cDForge = \"DwarvenForge\";");
 
    rmTriggerAddScriptLine("rule _weatherVFX");
@@ -46,9 +45,18 @@ void generateTriggers()
    rmTriggerAddScriptLine("    trDamageUnitsPercentInArea(0,\"SentryTower\",10000,50);");
 
    rmTriggerAddScriptLine("   for(int p = 0; p <= cNumberPlayers; p++){");
-   rmTriggerAddScriptLine("      trTechSetStatus(p, 491, 1);");
-   rmTriggerAddScriptLine("      trTechSetStatus(p, 492, 1);");
-   rmTriggerAddScriptLine("      trTechSetStatus(p, 493, 1);");
+   rmTriggerAddScriptLine("      trProtounitAddTech(cDForge, p, 616, 0, 0);");
+   rmTriggerAddScriptLine("      trProtounitAddTech(cDForge, p, 617, 0, 1);");
+   rmTriggerAddScriptLine("      trProtounitAddTech(cDForge, p, 618, 0, 2);");
+   rmTriggerAddScriptLine("      trTechSetStatus(p, 616, 1);");
+   rmTriggerAddScriptLine("      trTechSetStatus(p, 617, 1);");
+   rmTriggerAddScriptLine("      trTechSetStatus(p, 618, 1);");
+   rmTriggerAddScriptLine("      trTechModifyCost(616, p, 3, 0, 1);");
+   rmTriggerAddScriptLine("      trTechModifyCost(617, p, 3, 0, 1);");
+   rmTriggerAddScriptLine("      trTechModifyCost(618, p, 3, 0, 1);");
+   rmTriggerAddScriptLine("      trTechModifyResearchPoints(616, p, 120, 1);");
+   rmTriggerAddScriptLine("      trTechModifyResearchPoints(617, p, 120, 1);");
+   rmTriggerAddScriptLine("      trTechModifyResearchPoints(618, p, 120, 1);");
    
 /*   rmTriggerAddScriptLine("      trModifyProtounitAction(\"AOTGTitanKronos\", \"HandAttack\", p, 13, 35.0, 1);");
    rmTriggerAddScriptLine("      trModifyProtounitAction(\"AOTGTitanKronos\", \"HandAttack\", p, 15, 35.0, 1);");
@@ -64,7 +72,7 @@ void generateTriggers()
    rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cDForge, \"Invulnerable\", true);");
    rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cDForge, \"PlaySoundOnConversion\", true);");
    rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cDForge, \"AnnounceConversion\", true);");
-   rmTriggerAddScriptLine("      trProtounitAssignAction(cDForge, \"PlentyVaultKOTH\", \"AutoConvert\", p);");
+   rmTriggerAddScriptLine("      trProtounitAssignAction(cDForge, \"TradingPost\", \"AutoConvert\", p);");
    rmTriggerAddScriptLine("      trProtoUnitSetIcon(cDForge, p, \"\", \"ui\minimap\minimap_highlighted_item\");");
    rmTriggerAddScriptLine("   }");
    rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"CinematicBlockStartPoint\", \"TitanGatePreview\", true);");
@@ -72,7 +80,7 @@ void generateTriggers()
    rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"MapObjective\", cDForge, true);");
    rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"MapObjective\", cDForge, true);");
    rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(0, \"MapObjective\", cDForge, true);");        
-   rmTriggerAddScriptLine("      trProtounitAssignAction(cDForge, \"PlentyVaultKOTH\", \"AutoConvert\", 0);"); //Assign action to Gaia needs to be done after creation.   
+   rmTriggerAddScriptLine("      trProtounitAssignAction(cDForge, \"TradingPost\", \"AutoConvert\", 0);"); //Assign action to Gaia needs to be done after creation.   
    rmTriggerAddScriptLine("   xsDisableSelf();");
    rmTriggerAddScriptLine("}");
 
@@ -114,17 +122,32 @@ void generateTriggers()
    rmTriggerAddScriptLine("         if ((kbUnitTypeCount(\"AOTGTitanKronos\", p, cUnitStateAlive) <= 0))");   
    rmTriggerAddScriptLine("         {");
 
-//      rmTriggerAddScriptLine("         trUnitCreate(\"AOTGTitanKronos\", 0, 0, 0, 0, p, false);");   
-//   rmTriggerAddScriptLine("            string playerName = kbPlayerGetName(p);");
-//   rmTriggerAddScriptLine("            trMessageSetText(\"[playerColorOutline(" + p + ")]\" + playerName +\"</color> has picked up the Relic!\", 2.5);");
-//rmTriggerAddScriptLine("trMessageSetText(\"<color=1,0,1>\" + playerName + \"</color>\", 4);");            
-            // Flare location to all players
-   rmTriggerAddScriptLine("            vector gatePos = trUnitGetPosition(gGateID);");
-   rmTriggerAddScriptLine("            trUnitCreate(\"AOTGTitanKronos\", gatePos.x, gatePos.y, gatePos.z, 0, p, false);");   
-   rmTriggerAddScriptLine("         trMessageSetText(\""+kbPlayerGetName(1)+" has released the doom of the city...\", -1);");   
-/*   rmTriggerAddScriptLine("               for(int p = 1; p <= cNumberPlayers; p++){");
-   rmTriggerAddScriptLine("                  trMinimapFlare(1,10, vector(gatePos.x, gatePos.y, gatePos.z), true);"); 
-   rmTriggerAddScriptLine("                }");*/
+   rmTriggerAddScriptLine("            vector gatePos = kbUnitGetPosition(gGateID);");
+   rmTriggerAddScriptLine("            trUnitCreate(\"AOTGTitanKronos\", gatePos.x, gatePos.y, gatePos.z, 0, p, false);");
+
+   rmTriggerAddScriptLine("    xsSetContextPlayer(p);");
+   rmTriggerAddScriptLine("    int titanQuery = kbUnitQueryCreate(\"titanQuery\");");
+   rmTriggerAddScriptLine("    kbUnitQuerySetPlayerID(titanQuery, p);");
+   rmTriggerAddScriptLine("    kbUnitQuerySetUnitType(titanQuery, cUnitTypeAOTGTitanKronos);");
+   rmTriggerAddScriptLine("    kbUnitQuerySetState(titanQuery, cUnitStateAlive);");
+    
+   rmTriggerAddScriptLine("    int numResults = kbUnitQueryExecute(titanQuery);");
+   rmTriggerAddScriptLine("    if (numResults <= 0)");
+   rmTriggerAddScriptLine("    {");
+   rmTriggerAddScriptLine("        xsDisableSelf();");
+   rmTriggerAddScriptLine("        return;");
+   rmTriggerAddScriptLine("    }");
+
+   rmTriggerAddScriptLine("    gTitanID = kbUnitQueryGetResult(titanQuery, 0);");
+
+   rmTriggerAddScriptLine("      int playerID = kbUnitGetPlayerID(gTitanID);");
+   rmTriggerAddScriptLine("      if (playerID >= 1 && playerID < cNumberPlayersPlusNature)");
+   rmTriggerAddScriptLine("      {");
+   rmTriggerAddScriptLine("         string playerName = kbPlayerGetName(playerID);");
+   rmTriggerAddScriptLine("         string colorTag = \"[playerColorOutline(\" + playerID + \")]\";");
+   rmTriggerAddScriptLine("         trMessageSetText(colorTag + playerName + \"</color> has released the doom of the city...\", -1);");
+   rmTriggerAddScriptLine("      }");
+
    rmTriggerAddScriptLine("           }");
    rmTriggerAddScriptLine("      }");
    rmTriggerAddScriptLine("      }");
@@ -153,62 +176,14 @@ void generateTriggers()
    rmTriggerAddScriptLine("         if ((kbUnitTypeCount(\"DwarvenForge\", p, cUnitStateAlive) <= 3))");
    rmTriggerAddScriptLine("         {");
    rmTriggerAddScriptLine("            trUnitSelectByID(gGateID);");
-   rmTriggerAddScriptLine("            trDamageUnitsPercentInArea(p,\"AOTGTitanKronos\",10000,100);");
+   rmTriggerAddScriptLine("            vector titanPos = kbUnitGetPosition(gTitanID);");
+//   rmTriggerAddScriptLine("            trUnitCreate(\"VFXPillarRaiseSmokeDown\", titanPos.x, titanPos.y, titanPos.z, 0, 0, false);");  // this keeps repeating so removing it
+   rmTriggerAddScriptLine("            trUnitSelectByID(gTitanID);");
+   rmTriggerAddScriptLine("            trUnitDelete(false);");
+     rmTriggerAddScriptLine("         trMessageSetText(\"The Titan has been sealed again.\", -1);"); 
+//   rmTriggerAddScriptLine("            trDamageUnitsPercentInArea(p,\"AOTGTitanKronos\",10000,100);");
    rmTriggerAddScriptLine("         }");
    rmTriggerAddScriptLine("      }");
-   rmTriggerAddScriptLine("   }");
-   rmTriggerAddScriptLine("}");
-
-   rmTriggerAddScriptLine("rule _ifRegicide");
-   rmTriggerAddScriptLine("minInterval 2");
-   rmTriggerAddScriptLine("active");
-   rmTriggerAddScriptLine("{");
-   rmTriggerAddScriptLine("   if ((kbUnitTypeCount(\"Regent\", 1, cUnitStateAlive) >= 1))");
-   rmTriggerAddScriptLine("   {");
-   rmTriggerAddScriptLine("   for(int p = 1; p <= cNumberPlayers; p++){");
-   rmTriggerAddScriptLine("      trPlayerChangeProtoUnit(p, \"Regent\", cCRegent, true);");
-   rmTriggerAddScriptLine("      trProtoUnitChangeName(cCRegent, p, \"\", \"{STR_UNIT_REGENT_LR}\", \"{STR_UNIT_REGENT_SR}\");");
-   rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 6, 0, 1);"); //population count
-   rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 12, 60, 1);"); //max shield
-   rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 25, 60, 1);"); //initial shield
-   rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 26, 3, 1);"); //shield regen
-   rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 18, 0, 1);"); //regen limit
-   rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 17, 0, 1);"); //regen rate
-   rmTriggerAddScriptLine("      trModifyProtounitData(cCRegent, p, 0, 400, 1);"); //hp
-   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeHealable\", false);");
-   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeHealableHero\", false);");
-   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeHealed\", false);");
-   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"MilitaryUnit\", false);");
-   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeLandMilitary\", false);");
-   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeFindMilitaryHero\", false);");
-   rmTriggerAddScriptLine("      trProtoUnitSetUnitType(p, cCRegent, \"LogicalTypeValidBoltTarget\", false);");
-   rmTriggerAddScriptLine("      trModifyProtounitAction(cCRegent, \"RangedAttack\", p, 15, 6, 1);");
-   rmTriggerAddScriptLine("      trModifyProtounitAction(cCRegent, \"RangedAttack\", p, 16, 1, 1);");
-   rmTriggerAddScriptLine("      trProtoUnitSetFlag(p, cCRegent, \"KnockoutDeath\", false);");
-   rmTriggerAddScriptLine("      }");
-   rmTriggerAddScriptLine("   xsEnableRule(\"_regicideCustomDefeat\");");
-   rmTriggerAddScriptLine("   }");
-   rmTriggerAddScriptLine("   xsDisableSelf();");
-   rmTriggerAddScriptLine("}");
-
-   rmTriggerAddScriptLine("rule _regicideCustomDefeat");
-   rmTriggerAddScriptLine("highFrequency");
-   rmTriggerAddScriptLine("inactive");
-   rmTriggerAddScriptLine("{");
-   rmTriggerAddScriptLine("   int aliveCount = 0;");
-   rmTriggerAddScriptLine("   int lastAlivePlayer = -1;");
-   rmTriggerAddScriptLine("   for (int p = 1; p <= cNumberPlayers; p++) {");
-   rmTriggerAddScriptLine("      if (kbUnitTypeCount(cCRegent, p, cUnitStateAlive) <= 0) {");
-   rmTriggerAddScriptLine("         trPlayerSetDefeated(p);");
-   rmTriggerAddScriptLine("      } else {");
-   rmTriggerAddScriptLine("         aliveCount++;");
-   rmTriggerAddScriptLine("         lastAlivePlayer = p;");
-   rmTriggerAddScriptLine("      }");
-   rmTriggerAddScriptLine("   }");
-   rmTriggerAddScriptLine("   if (aliveCount == 1) {");
-   rmTriggerAddScriptLine("      trPlayerSetWon(lastAlivePlayer);");
-   rmTriggerAddScriptLine("      trEndGame();");
-   rmTriggerAddScriptLine("      xsDisableSelf();");
    rmTriggerAddScriptLine("   }");
    rmTriggerAddScriptLine("}");
 
@@ -228,7 +203,6 @@ void generateTriggers()
    rmTriggerAddScriptLine("   }");
    rmTriggerAddScriptLine("   xsDisableSelf();");
    rmTriggerAddScriptLine("}");
-
 }
 
 void generate()
@@ -246,6 +220,8 @@ void generate()
    
    int pitMixID = rmCustomMixCreate();
    rmCustomMixSetPaintParams(pitMixID, cNoiseFractalSum, 0.3, 5, 0.5);
+   rmCustomMixAddPaintEntry(pitMixID, cTerrainGreekRoadBurnt1, 5.0);
+   rmCustomMixAddPaintEntry(pitMixID, cTerrainGreekRoadBurnt2, 3.0);
    rmCustomMixAddPaintEntry(pitMixID, cTerrainGreekDirtRocks2, 2.0);
    rmCustomMixAddPaintEntry(pitMixID, cTerrainGreekDirtRocks1, 3.0);
    rmCustomMixAddPaintEntry(pitMixID, cTerrainGreekDirt3, 2.0);
@@ -260,7 +236,7 @@ void generate()
    rmCustomMixAddPaintEntry(pitLayerMixID, cTerrainGreekGrassDirt3, 3.0);
 
    // Map size and terrain init.
-   int axisTiles = getScaledAxisTiles(166);
+   int axisTiles = getScaledAxisTiles(160);
    rmSetMapSize(axisTiles);
    rmInitializeMix(baseMixID);
 
@@ -278,7 +254,8 @@ void generate()
    placeKotHObjects();
 
    // Lighting.
-   rmSetLighting(cLightingSetRmGoldRush01);
+//   rmSetLighting(cLightingSetRmGoldRush01);
+   rmSetLighting(cLightingSetYasYas051);
 
    rmSetProgress(0.1);
 
@@ -304,17 +281,7 @@ void generate()
 
    // Center pit area.
    
-   float goldAreaHeight = 0.0;
-   bool goldAreaHeightRandomizer = xsRandBool(0.5);
-   
-   if(goldAreaHeightRandomizer == true)
-   {
-      goldAreaHeight = 8.0;
-   }
-   else
-   {
-      goldAreaHeight = -8.0;
-   }
+   float goldAreaHeight = -8.0;
 
    // Outer pit area to create a dirt-like buffer area between cliff and the grass.
    int outerPitID = rmAreaCreate("outer pit");
@@ -379,12 +346,11 @@ void generate()
    int avoidPitEdge8 = rmCreateAreaEdgeDistanceConstraint(pitID, 8.0);
    int avoidPit16 = rmCreateClassDistanceConstraint(pitClassID, 16.0);
 
-
    // Control points
    int centerControlPointsID = rmObjectDefCreate("control points");
    rmObjectDefAddItem(centerControlPointsID, cUnitTypeMapObjective, 1);
    rmObjectDefAddItem(centerControlPointsID, cUnitTypeSentryTower, 3, xsRandInt(4.0, 8.0));
-   placeObjectDefInCircle(centerControlPointsID, 0, 4, 45.0 + (5 * getMapAreaSizeFactor()));
+   placeObjectDefInCircle(centerControlPointsID, 0, 4, 45.0 + cNumberPlayers);
 
    int summonID = rmObjectCreate("summon gate");
    rmObjectAddItem(summonID, cUnitTypeCinematicBlockStartPoint);
@@ -396,16 +362,16 @@ void generate()
       rmObjectDefAddItem(kothFlagsID, cUnitTypeTorch, 1);
       rmObjectDefSetItemVariation(kothFlagsID, 0, 0);
       placeObjectDefInCircle(kothFlagsID, 0, 6, 16.0);
+   }
 
       int unbuildableKotHID = rmAreaCreate("koth island");
-      rmAreaSetSize(unbuildableKotHID, rmRadiusToAreaFraction(22.0));
+      rmAreaSetSize(unbuildableKotHID, rmRadiusToAreaFraction(20.0));
       rmAreaSetLoc(unbuildableKotHID, cCenterLoc);
       rmAreaSetTerrainType(unbuildableKotHID, cTerrainHadesCracked1);
 
       rmAreaAddToClass(unbuildableKotHID, vKotHClassID);
 
       rmAreaBuild(unbuildableKotHID);
-   }
 
    rmSetProgress(0.3);
 
@@ -452,6 +418,49 @@ void generate()
 
    rmSetProgress(0.4);
 
+   // Cliffs.
+   int cliffClassID = rmClassCreate();
+   int numCliffsPerPlayer = xsRandInt(1 * getMapAreaSizeFactor(), 2 * getMapAreaSizeFactor());
+
+   // Scale with map size.
+   float cliffMinSize = rmTilesToAreaFraction(350 * getMapAreaSizeFactor());
+   float cliffMaxSize = rmTilesToAreaFraction(400 * getMapAreaSizeFactor());
+
+   int cliffAvoidCliff = rmCreateClassDistanceConstraint(cliffClassID, 40.0);
+   int cliffAvoidBuildings = rmCreateTypeDistanceConstraint(cUnitTypeBuilding, 20.0);
+
+   for(int i = 1; i <= cNumberPlayers; i++)
+   {
+      int p = vDefaultTeamPlayerOrder[i];
+      int teamArea = vTeamAreaIDs[rmGetPlayerTeam(p)];
+
+      for(int j = 0; j < numCliffsPerPlayer; j++)
+      {
+         int cliffID = rmAreaCreate("cliff " + p + " " + j);
+         rmAreaSetParent(cliffID, teamArea);
+
+         rmAreaSetSize(cliffID, xsRandFloat(cliffMinSize, cliffMaxSize));
+         rmAreaSetTerrainType(cliffID, cTerrainGreekGrassDirt1);
+         rmAreaSetCliffType(cliffID, cCliffGreekGrass);
+         rmAreaSetCliffRamps(cliffID, 2, 0.25, 0.0, 1.0);
+         rmAreaSetCliffRampSteepness(cliffID, 2.0);
+         rmAreaSetCliffEmbellishmentDensity(cliffID, 0.25);
+         
+         rmAreaSetHeightRelative(cliffID, 7.0);
+         rmAreaAddHeightBlend(cliffID, cBlendAll, cFilter5x5Gaussian);
+         rmAreaSetEdgeSmoothDistance(cliffID, 10);
+         rmAreaSetCoherence(cliffID, 0.25);
+
+         rmAreaAddConstraint(cliffID, cliffAvoidCliff);
+         rmAreaAddConstraint(cliffID, cliffAvoidBuildings);
+         rmAreaAddConstraint(cliffID, avoidPit16);
+         rmAreaAddConstraint(cliffID, vDefaultAvoidTowerLOS);
+         rmAreaAddToClass(cliffID, cliffClassID);
+
+         rmAreaBuild(cliffID);
+      }
+   }
+
    // Starting objects.
    // Starting gold.
    int startingGoldID = rmObjectDefCreate("starting gold");
@@ -463,7 +472,7 @@ void generate()
    addObjectLocsPerPlayer(startingGoldID, false, 1, cStartingGoldMinDist, cStartingGoldMaxDist, cStartingObjectAvoidanceMeters);
 
    int startingGoldSmallID = rmObjectDefCreate("starting gold small");
-   rmObjectDefAddItem(startingGoldSmallID, cUnitTypeMineGoldSmall, 1);
+   rmObjectDefAddItem(startingGoldSmallID, cUnitTypeMineGoldMedium, 1);
    rmObjectDefAddConstraint(startingGoldSmallID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(startingGoldSmallID, vDefaultGoldAvoidImpassableLand);
    rmObjectDefAddConstraint(startingGoldSmallID, vDefaultStartingGoldAvoidTower);
@@ -511,12 +520,7 @@ void generate()
    rmSetProgress(0.5);
 
    // Gold.
-   int numCenterGoldPerPlayer = xsRandInt(3, 4) * getMapAreaSizeFactor();
-   if(cNumberPlayers > 4)
-   {
-      numCenterGoldPerPlayer = 3 * getMapAreaSizeFactor();
-   }
-   float avoidGoldMeters = 40.0;
+   float avoidGoldMeters = 50.0;
 
    // Bonus gold.
    int bonusGoldID = rmObjectDefCreate("bonus gold");
@@ -524,30 +528,21 @@ void generate()
    rmObjectDefAddConstraint(bonusGoldID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(bonusGoldID, vDefaultGoldAvoidAll);
    rmObjectDefAddConstraint(bonusGoldID, vDefaultGoldAvoidImpassableLand);
+   rmObjectDefAddConstraint(bonusGoldID, vDefaultAvoidCorner40);
    rmObjectDefAddConstraint(bonusGoldID, vDefaultAvoidTowerLOS);
    rmObjectDefAddConstraint(bonusGoldID, vDefaultAvoidSettlementRange);
-   rmObjectDefAddConstraint(bonusGoldID, avoidPit16);
+   rmObjectDefAddConstraint(bonusGoldID, avoidPit8);
    addObjectDefPlayerLocConstraint(bonusGoldID, 70.0);
-
-   if(gameIs1v1() == true)
+   if(gameIs1v1()== true)
    {
-      addSimObjectLocsPerPlayerPair(bonusGoldID, false, numCenterGoldPerPlayer, 70.0, -1.0, avoidGoldMeters);
-   }
-   else if(gameIsFair() == true)
-   {
-      addObjectLocsPerPlayer(bonusGoldID, false, numCenterGoldPerPlayer, 70.0, -1.0, avoidGoldMeters, cBiasAggressive);
+      addSimObjectLocsPerPlayerPair(bonusGoldID, false, xsRandInt(2, 4) * getMapAreaSizeFactor(), 70.0, -1.0, avoidGoldMeters);
    }
    else
    {
-      // TODO Verify this?
-      rmObjectDefAddConstraint(bonusGoldID, rmCreateTypeDistanceConstraint(cUnitTypeGoldResource, avoidGoldMeters));
-      rmObjectDefPlaceAtLoc(bonusGoldID, 0, cCenterLoc, 0.0, rmXFractionToMeters(0.4), numCenterGoldPerPlayer * cNumberPlayers);
+      addObjectLocsPerPlayer(bonusGoldID, false, xsRandInt(2, 4) * getMapAreaSizeFactor(), 70.0, -1.0, avoidGoldMeters);
    }
 
-   if(gameIsFair() == true)
-   {
-      generateLocs("gold locs");
-   }
+   generateLocs("gold locs");
 
    rmSetProgress(0.6);
 
@@ -723,14 +718,13 @@ void generate()
    rmObjectDefAddItem(pitRelicID, cUnitTypeRelic, 1);
    rmObjectDefAddItem(pitRelicID, cUnitTypeShadePredator, 3, 4.0);
    rmObjectDefAddConstraint(pitRelicID, vDefaultAvoidEdge);
-   rmObjectDefAddConstraint(pitRelicID, vDefaultRelicAvoidAll);
    rmObjectDefAddConstraint(pitRelicID, vDefaultRelicAvoidImpassableLand);
    rmObjectDefAddConstraint(pitRelicID, vDefaultAvoidTowerLOS);
    rmObjectDefAddConstraint(pitRelicID, vDefaultAvoidSettlementRange);
    rmObjectDefAddConstraint(pitRelicID, forceInPit);
    rmObjectDefAddConstraint(pitRelicID, avoidPitEdge8);
    addObjectDefPlayerLocConstraint(pitRelicID, 60.0);
-   addObjectLocsPerPlayer(pitRelicID, false, 1, 60.0, -1.0, avoidRelicMeters, cBiasNone, cInAreaNone);
+   addObjectLocsPerPlayer(pitRelicID, false, 2, 60.0, -1.0, avoidRelicMeters, cBiasNone, cInAreaNone);
 
    int outerRelicID = rmObjectDefCreate("outer relic");
    rmObjectDefAddItem(outerRelicID, cUnitTypeRelic, 1);
@@ -779,7 +773,7 @@ void generate()
    // rmAreaDefSetConstraintBuffer(forestDefID, 0.0, 6.0);
 
    // Build for each player in the team area.
-   buildAreaDefInTeamAreas(forestDefID, 12 * getMapAreaSizeFactor());
+   buildAreaDefInTeamAreas(forestDefID, 15 * getMapAreaSizeFactor());
 
    // Stragglers.
    placeStartingStragglers(cUnitTypeTreeOak);
@@ -806,7 +800,7 @@ void generate()
    rmObjectDefAddConstraint(randomTreeID, vDefaultTreeAvoidTree);
    rmObjectDefAddConstraint(randomTreeID, vDefaultAvoidSettlementWithFarm);
    rmObjectDefAddConstraint(randomTreeID, avoidPit8);
-   rmObjectDefPlaceAnywhere(randomTreeID, 0, 6 * cNumberPlayers * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(randomTreeID, 0, 8 * cNumberPlayers * getMapAreaSizeFactor());
    
    int randomTreePitID = rmObjectDefCreate("random tree pit");
    rmObjectDefAddItem(randomTreePitID, cUnitTypeTreeHades, 1);
@@ -816,29 +810,17 @@ void generate()
    rmObjectDefAddConstraint(randomTreePitID, vDefaultTreeAvoidTree);
    rmObjectDefAddConstraint(randomTreePitID, vDefaultAvoidSettlementWithFarm);
    rmObjectDefAddConstraint(randomTreePitID, forceInPit);
-   rmObjectDefPlaceAnywhere(randomTreePitID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(randomTreePitID, 0, 5 * cNumberPlayers * getMapAreaSizeFactor());
 
    // Rocks.
    int rockTinyID = rmObjectDefCreate("rock tiny");
    rmObjectDefAddItem(rockTinyID, cUnitTypeRockGreekTiny, 1);
    rmObjectDefAddConstraint(rockTinyID, vDefaultEmbellishmentAvoidAll);
    rmObjectDefPlaceAnywhere(rockTinyID, 0, 15 * cNumberPlayers * getMapAreaSizeFactor());
-   
-   int rockTinyGoldID = rmObjectDefCreate("rock tiny gold");
-   rmObjectDefAddItem(rockTinyGoldID, cUnitTypeRockGoldTiny, 1);
-   rmObjectDefAddConstraint(rockTinyGoldID, avoidPitEdge8);
-   rmObjectDefAddConstraint(rockTinyGoldID, forceInPit);
-   rmObjectDefPlaceAnywhere(rockTinyGoldID, 0, 25 * cNumberPlayers * getMapAreaSizeFactor());
 
    int rockSmallID = rmObjectDefCreate("rock small");
    rmObjectDefAddItem(rockSmallID, cUnitTypeRockGreekSmall, 1);
    rmObjectDefPlaceAnywhere(rockSmallID, 0, 35 * cNumberPlayers);
-
-   int rockSmallGoldID = rmObjectDefCreate("rock small gold");
-   rmObjectDefAddItem(rockSmallGoldID, cUnitTypeRockGoldSmall, 1);
-   rmObjectDefAddConstraint(rockSmallGoldID, avoidPitEdge8);
-   rmObjectDefAddConstraint(rockSmallGoldID, forceInPit);
-   rmObjectDefPlaceAnywhere(rockSmallGoldID, 0, 25 * cNumberPlayers * getMapAreaSizeFactor());
 
    // Plants.
    int plantGrassID = rmObjectDefCreate("plant grass");
@@ -873,7 +855,38 @@ void generate()
    rmObjectDefAddConstraint(plantWeedsID, avoidPit8);
    rmObjectDefPlaceAnywhere(plantWeedsID, 0, 15 * cNumberPlayers * getMapAreaSizeFactor());
 
-   // TODO Pit plants.
+   // Pit plants.
+   int plantDeadGrassID = rmObjectDefCreate("plant dead grass");
+   rmObjectDefAddItem(plantDeadGrassID, cUnitTypePlantDeadGrass, 1);
+   rmObjectDefAddConstraint(plantDeadGrassID, vDefaultEmbellishmentAvoidAll);
+   rmObjectDefAddConstraint(plantDeadGrassID, forceInPit);
+   rmObjectDefPlaceAnywhere(plantDeadGrassID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());
+   
+   int plantDeadBushID = rmObjectDefCreate("plant dead bush");
+   rmObjectDefAddItem(plantDeadBushID, cUnitTypePlantDeadBush, 1);
+   rmObjectDefAddConstraint(plantDeadBushID, vDefaultEmbellishmentAvoidAll);
+   rmObjectDefAddConstraint(plantDeadBushID, forceInPit);
+   rmObjectDefPlaceAnywhere(plantDeadBushID, 0, 10 * cNumberPlayers * getMapAreaSizeFactor());
+   
+   int plantDeadShrubID = rmObjectDefCreate("plant dead shrub");
+   rmObjectDefAddItem(plantDeadShrubID, cUnitTypePlantDeadShrub, 1);
+   rmObjectDefAddConstraint(plantDeadShrubID, vDefaultEmbellishmentAvoidAll);
+   rmObjectDefAddConstraint(plantDeadShrubID, forceInPit);
+   rmObjectDefPlaceAnywhere(plantDeadShrubID, 0, 10 * cNumberPlayers * getMapAreaSizeFactor());
+   
+   int plantDeadFernID = rmObjectDefCreate("plant dead fern");
+   rmObjectDefAddItem(plantDeadFernID, cUnitTypePlantDeadFern, 1);
+   rmObjectDefAddConstraint(plantDeadFernID, vDefaultEmbellishmentAvoidAll);
+   rmObjectDefAddConstraint(plantDeadFernID, vDefaultAvoidEdge);
+   rmObjectDefAddConstraint(plantDeadFernID, forceInPit);
+   rmObjectDefPlaceAnywhere(plantDeadFernID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());
+   
+   int plantDeadWeedsID = rmObjectDefCreate("plant dead weeds");
+   rmObjectDefAddItem(plantDeadWeedsID, cUnitTypePlantDeadWeeds, 1);
+   rmObjectDefAddConstraint(plantDeadWeedsID, vDefaultEmbellishmentAvoidAll);
+   rmObjectDefAddConstraint(plantDeadWeedsID, vDefaultAvoidEdge);
+   rmObjectDefAddConstraint(plantDeadWeedsID, forceInPit);
+   rmObjectDefPlaceAnywhere(plantDeadWeedsID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());
 
    // Pit Ruins
     int ruinsID = rmObjectDefCreate("ruins");
@@ -881,37 +894,46 @@ void generate()
    rmObjectDefAddConstraint(ruinsID, vDefaultEmbellishmentAvoidAll);
    rmObjectDefAddConstraint(ruinsID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(ruinsID, forceInPit);
-   rmObjectDefPlaceAnywhere(ruinsID, 0, 6 * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(ruinsID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());
 
    int columnsID = rmObjectDefCreate("columns");
    rmObjectDefAddItem(columnsID, cUnitTypeColumns, 1);
    rmObjectDefAddConstraint(columnsID, vDefaultEmbellishmentAvoidAll);
    rmObjectDefAddConstraint(columnsID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(columnsID, forceInPit);
-   rmObjectDefPlaceAnywhere(columnsID, 0, 6 * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(columnsID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());
 
    int columnsFallenID = rmObjectDefCreate("columns fallen");
    rmObjectDefAddItem(columnsFallenID, cUnitTypeColumnsFallen, 1);
    rmObjectDefAddConstraint(columnsFallenID, vDefaultEmbellishmentAvoidAll);
    rmObjectDefAddConstraint(columnsFallenID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(columnsFallenID, forceInPit);
-   rmObjectDefPlaceAnywhere(columnsFallenID, 0, 6 * getMapAreaSizeFactor());  
+   rmObjectDefPlaceAnywhere(columnsFallenID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());  
 
    int columnsBrokenID = rmObjectDefCreate("columns broken");
    rmObjectDefAddItem(columnsBrokenID, cUnitTypeColumnsBroken, 1);
    rmObjectDefAddConstraint(columnsBrokenID, vDefaultEmbellishmentAvoidAll);
    rmObjectDefAddConstraint(columnsBrokenID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(columnsBrokenID, forceInPit);
-   rmObjectDefPlaceAnywhere(columnsBrokenID, 0, 6 * getMapAreaSizeFactor());   
+   rmObjectDefPlaceAnywhere(columnsBrokenID, 0, 3 * cNumberPlayers  * getMapAreaSizeFactor()); 
 
-   int ruinsLargeID = rmObjectDefCreate("destroyed large");
-   rmObjectDefAddItem(ruinsLargeID, cUnitTypeDestroyedLarge, 1);
-   rmObjectDefSetItemVariation(ruinsLargeID, 0, xsRandInt(0,1));
-   rmObjectDefAddConstraint(ruinsLargeID, vDefaultEmbellishmentAvoidAll);
-   rmObjectDefAddConstraint(ruinsLargeID, vDefaultAvoidEdge);
-   rmObjectDefAddConstraint(ruinsLargeID, avoidPitEdge8);
-   rmObjectDefAddConstraint(ruinsLargeID, forceInPit);
-   rmObjectDefPlaceAnywhere(ruinsLargeID, 0, 1 * getMapAreaSizeFactor());
+   int ruinsLarge0ID = rmObjectDefCreate("destroyed large 0");
+   rmObjectDefAddItem(ruinsLarge0ID, cUnitTypeDestroyedLarge, 1);
+   rmObjectDefSetItemVariation(ruinsLarge0ID, 0, 0);
+   rmObjectDefAddConstraint(ruinsLarge0ID, vDefaultEmbellishmentAvoidAll);
+   rmObjectDefAddConstraint(ruinsLarge0ID, vDefaultAvoidEdge);
+   rmObjectDefAddConstraint(ruinsLarge0ID, avoidPitEdge8);
+   rmObjectDefAddConstraint(ruinsLarge0ID, forceInPit);
+   rmObjectDefPlaceAnywhere(ruinsLarge0ID, 0, 1 * (0.5 * cNumberPlayers) * getMapAreaSizeFactor());
+
+   int ruinsLarge1ID = rmObjectDefCreate("destroyed large 1");
+   rmObjectDefAddItem(ruinsLarge1ID, cUnitTypeDestroyedLarge, 1);
+   rmObjectDefSetItemVariation(ruinsLarge1ID, 0, 1);
+   rmObjectDefAddConstraint(ruinsLarge1ID, vDefaultEmbellishmentAvoidAll);
+   rmObjectDefAddConstraint(ruinsLarge1ID, vDefaultAvoidEdge);
+   rmObjectDefAddConstraint(ruinsLarge1ID, avoidPitEdge8);
+   rmObjectDefAddConstraint(ruinsLarge1ID, forceInPit);
+   rmObjectDefPlaceAnywhere(ruinsLarge1ID, 0, 1 * (0.5 * cNumberPlayers) * getMapAreaSizeFactor());
 
    int ruinsMedID = rmObjectDefCreate("destroyed medium");
    rmObjectDefAddItem(ruinsMedID, cUnitTypeDestroyedMed, 1);
@@ -919,7 +941,7 @@ void generate()
    rmObjectDefAddConstraint(ruinsMedID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(ruinsMedID, avoidPitEdge8);   
    rmObjectDefAddConstraint(ruinsMedID, forceInPit);
-   rmObjectDefPlaceAnywhere(ruinsMedID, 0, 4 * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(ruinsMedID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());
 
    int ruinsSmallID = rmObjectDefCreate("destroyed small");
    rmObjectDefAddItem(ruinsSmallID, cUnitTypeDestroyedSmall, 1);
@@ -927,49 +949,57 @@ void generate()
    rmObjectDefAddConstraint(ruinsSmallID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(ruinsSmallID, avoidPitEdge8);      
    rmObjectDefAddConstraint(ruinsSmallID, forceInPit);
-   rmObjectDefPlaceAnywhere(ruinsSmallID, 0, 8 * getMapAreaSizeFactor());  
+   rmObjectDefPlaceAnywhere(ruinsSmallID, 0, 4 * cNumberPlayers * getMapAreaSizeFactor());  
 
    int rubble1ID = rmObjectDefCreate("rubble 1");
    rmObjectDefAddItem(rubble1ID, cUnitTypeBuildingRubble1x1, 1);
    rmObjectDefAddConstraint(rubble1ID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(rubble1ID, forceInPit);
-   rmObjectDefPlaceAnywhere(rubble1ID, 0, 15 * getMapAreaSizeFactor());   
+   rmObjectDefPlaceAnywhere(rubble1ID, 0, 8 * cNumberPlayers  * getMapAreaSizeFactor());   
 
    int rubble2ID = rmObjectDefCreate("rubble 2");
    rmObjectDefAddItem(rubble2ID, cUnitTypeBuildingRubble2x2, 1);
    rmObjectDefAddConstraint(rubble2ID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(rubble2ID, forceInPit);
-   rmObjectDefPlaceAnywhere(rubble2ID, 0, 10 * getMapAreaSizeFactor());
+   rmObjectDefPlaceAnywhere(rubble2ID, 0, 5 * cNumberPlayers * getMapAreaSizeFactor());
 
    int rubble4ID = rmObjectDefCreate("rubble 4");
    rmObjectDefAddItem(rubble4ID, cUnitTypeBuildingRubble4x4, 1);
    rmObjectDefAddConstraint(rubble4ID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(rubble4ID, forceInPit);
-   rmObjectDefPlaceAnywhere(rubble4ID, 0, 8 * getMapAreaSizeFactor());  
+   rmObjectDefPlaceAnywhere(rubble4ID, 0, 4 * cNumberPlayers * getMapAreaSizeFactor());  
 
-   int rubble5ID = rmObjectDefCreate("rubble 5");
+ /*   int rubble5ID = rmObjectDefCreate("rubble 5");
    rmObjectDefAddItem(rubble5ID, cUnitTypeBuildingRubble5x5, 1);
    rmObjectDefAddConstraint(rubble5ID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(rubble5ID, forceInPit);
-   rmObjectDefPlaceAnywhere(rubble5ID, 0, 6 * getMapAreaSizeFactor()); 
+   rmObjectDefPlaceAnywhere(rubble5ID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor()); 
 
    int rubble8ID = rmObjectDefCreate("rubble 8");
    rmObjectDefAddItem(rubble8ID, cUnitTypeBuildingRubble8x8, 1);
    rmObjectDefAddConstraint(rubble8ID, vDefaultAvoidEdge);
    rmObjectDefAddConstraint(rubble8ID, forceInPit);
-   rmObjectDefPlaceAnywhere(rubble8ID, 0, 3 * getMapAreaSizeFactor());   
+   rmObjectDefPlaceAnywhere(rubble8ID, 0, 2 * cNumberPlayers * getMapAreaSizeFactor());   */
 
    // Logs.
    int logID = rmObjectDefCreate("log");
    rmObjectDefAddItem(logID, cUnitTypeRottingLog, 1);
    rmObjectDefAddConstraint(logID, vDefaultEmbellishmentAvoidAll);
-   rmObjectDefAddConstraint(logID, avoidPit8);
    rmObjectDefPlaceAnywhere(logID, 0, 10 * cNumberPlayers * getMapAreaSizeFactor());
+
+   int logGroupID = rmObjectDefCreate("log group");
+   rmObjectDefAddItem(logGroupID, cUnitTypeRottingLog, 2, 2.0);
+   rmObjectDefAddConstraint(logGroupID, vDefaultEmbellishmentAvoidAll);
+   rmObjectDefPlaceAnywhere(logGroupID, 0, 3 * cNumberPlayers * getMapAreaSizeFactor());
 
    // Birbs.
    int birdID = rmObjectDefCreate("bird");
    rmObjectDefAddItem(birdID, cUnitTypeHawk, 1);
    rmObjectDefPlaceAnywhere(birdID, 0, 2 * cNumberPlayers * getMapAreaSizeFactor());
+
+   int centerHeavyRain = rmObjectDefCreate("heavyrain");
+   rmObjectDefAddItem(centerHeavyRain, cUnitTypeVFXWeatherRainHeavy, 1);
+   rmObjectDefPlaceAtLoc(centerHeavyRain, 0, cCenterLoc);
 
    generateTriggers();
    rmSetProgress(1.0);
