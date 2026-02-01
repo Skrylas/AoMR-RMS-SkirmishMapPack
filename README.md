@@ -1,6 +1,11 @@
 # Age of Mythology Retold - Skray's Skirmish Map Pack
 A collection of Random Map Scripts:
 
+
+[Forgotten City](https://www.ageofempires.com/mods/details/458766/)
+- Forgotten City -  A recreation of the old Forgotten City map.  In the center of the map lies a forgotten and ruined city, take and keep control of the four points to unleash the Titan trapped in the center.  If any of the points are lost, the Titan will be trapped again.  Holding any control point will also allow you to research unique armory technologies, if you can keep control of them for long enough.
+- Forgotten City (Norse) -  A Norse reskin of the above.
+
 [Frost and Flood](https://www.ageofempires.com/mods/details/423682/)
 - Seto Rainlands - Shallow currents of water run through the map, bringing opportunities for fish and naval combat, while still allowing your armies to traverse on foot. Take control of the shallow waters through a combination of men, myth and ships.  Play on Regicide Mode for a custom regent, Abe-no-Seimei.  Features a custom King-of-the-Hill mode too.
 - Seto Rainlands (Frozen) - A winter version of the above with frozen waters that cannot be built on, this has no options for naval combat or fishing for those who dislike water maps.  Play on Regicide Mode for a custom regent, Abe-no-Seimei.  Features a custom King-of-the-Hill mode too.
