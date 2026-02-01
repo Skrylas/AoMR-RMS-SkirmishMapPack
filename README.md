@@ -2,7 +2,7 @@
 A collection of Random Map Scripts:
 
 
-[Forgotten City]([https://www.ageofempires.com/mods/details/423682/](https://www.ageofempires.com/mods/details/458766))
+[Forgotten City](https://www.ageofempires.com/mods/details/458766/)
 - Forgotten City -  A recreation of the old Forgotten City map.  In the center of the map lies a forgotten and ruined city, take and keep control of the four points to unleash the Titan trapped in the center.  If any of the points are lost, the Titan will be trapped again.  Holding any control point will also allow you to research unique armory technologies, if you can keep control of them for long enough.
 - Forgotten City (Norse) -  A Norse reskin of the above.
 
