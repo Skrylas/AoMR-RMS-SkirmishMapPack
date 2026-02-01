@@ -1,0 +1,9 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Forgotten City v1"
+    detailsText = "Lost to time, the ruins of the city hold dark secrets.  Control the forges to learn ancient secrets, and control all four to unleash the city's destroyer."
+    loadDetails="Control the forges to learn ancient secrets, and control all four to unleash the city's destroyer."
+    imagepath = "resources\maps\map_picker\forgotten_city.png"
+    loadBackground="resources\maps\previews\gold_rush.png"
+    landmap="">
+</mapinfo>
