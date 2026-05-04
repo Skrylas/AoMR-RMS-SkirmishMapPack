@@ -1,0 +1,10 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Autumn Exchange v1"
+    detailsText = "A trading post lies at the center of this autumn forest.  Players are placed alternating between friend and foe, requiring the right balance of defense and offense."
+    loadDetailsText = ""
+    imagepath = "resources\maps\map_picker\AutumnExchange.png"
+    loadBackground="resources\maps\previews\AutumnExchange.png"
+    landmap="">
+</mapinfo>
+

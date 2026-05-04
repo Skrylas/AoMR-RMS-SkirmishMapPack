@@ -1,0 +1,10 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Aztlan Oasis v1" 
+    detailsText = "In the center of the Aztlan desert lies a lush oasis, with plenty of wood and food to sustain a lost civilization.  But this oasis is contested and requires the proper defense and aggression with team members alternating with the opposing teams."
+    loadDetailsText = "In the center of the Aztlan desert lies a lush oasis, with plenty of wood and food to sustain a lost civilization.  But this oasis is contested and requires the proper defense and aggression with team members alternating with the opposing teams."
+    imagepath = "resources\maps\map_picker\AztlanOasis.png"
+    loadBackground="resources\maps\previews\AztlanOasis.png"
+    landmap="">
+</mapinfo>
+
