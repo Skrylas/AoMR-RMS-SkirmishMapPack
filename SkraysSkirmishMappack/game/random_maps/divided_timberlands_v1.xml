@@ -1,0 +1,9 @@
+﻿<?xml version = "1.0" encoding = "UTF-8"?>
+<mapinfo 
+    displayName = "Divided Timberlands v1"
+    detailsText = "This forest is split by a lake which divides the teams and leaves one member alone to face the opposition."
+    loadDetails="This forest is split by a lake which divides the teams and leaves one member alone to face the opposition."
+    imagepath = "resources\maps\map_picker\DividedTimberlands.png" 
+    loadBackground="resources\maps\previews\DividedTimberlands.png"
+    landmap="">
+</mapinfo>
