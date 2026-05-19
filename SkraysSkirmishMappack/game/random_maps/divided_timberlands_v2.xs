@@ -27,7 +27,7 @@ void generate()
    }
 
    int xTiles = (160 + 40 * maxTeamSize) * sqrt(getMapAreaSizeFactor());
-   int zTiles = (190 + 10 * maxTeamSize) * sqrt(getMapAreaSizeFactor());
+   int zTiles = (170 + 20 * maxTeamSize) * sqrt(getMapAreaSizeFactor());
    rmSetMapSize(xTiles, zTiles);
 
    rmInitializeMix(baseMixID);
@@ -79,7 +79,7 @@ void generate()
    // Finalize player placement and do post-init things.
    postPlayerPlacement();*/
 
-    int   p1solo  = -1;
+/*    int   p1solo  = -1;
     int   p1pair0 = -1;
     int   p1pair1 = -1;
     int   p2solo  = -1;
@@ -118,7 +118,167 @@ void generate()
    {
       rmPlacePlayersOnCircle(0.35);
    }
+   postPlayerPlacement();*/
+
+// Player placement
+
+int p1solo  = -1;
+int p1pair0 = -1;
+int p1pair1 = -1;
+int p1pair2 = -1;
+int p1pair3 = -1;
+
+int p2solo  = -1;
+int p2pair0 = -1;
+int p2pair1 = -1;
+int p2pair2 = -1;
+int p2pair3 = -1;
+
+int teamSize1 = rmGetNumberPlayersOnTeam(1);
+int teamSize2 = rmGetNumberPlayersOnTeam(2);
+
+int gSoloCountPerTeam = 0;
+int gTeamSize         = 0;
+int gP1Solo0          = -1;
+int gP1Solo1          = -1;
+int gP2Solo0          = -1;
+int gP2Solo1          = -1;
+
+// Fallback for mismatched teams
+if (cNumberTeams != 2 || teamSize1 != teamSize2)
+{
+   rmPlacePlayersOnCircle(0.35);
    postPlayerPlacement();
+}
+else
+{
+    int teamSize = teamSize1;
+gTeamSize = teamSize;
+
+// How many separated players per team
+int soloCount = 0;
+if (teamSize == 2) soloCount = 1;
+if (teamSize == 3) soloCount = 1;
+if (teamSize == 4) soloCount = 1;
+if (teamSize == 5) soloCount = 2;
+if (teamSize == 6) soloCount = 2;
+
+gSoloCountPerTeam = soloCount;
+
+    // 1v1 special case
+    if (gameIs1v1() == true)
+    {
+        placePlayersOnLine(vectorXZ(0.25, 0.5), vectorXZ(0.75, 0.5));
+        postPlayerPlacement();
+    }
+    else
+    {
+        int backCount = teamSize - soloCount;
+
+// Base 3v3 spacing
+int yMin = 300;   // 0.30
+int yMax = 700;   // 0.70
+
+// Expand spacing for larger teams
+if (teamSize == 4)
+{
+    yMin = 280;   // 0.28
+    yMax = 720;   // 0.72
+}
+else if (teamSize == 5)
+{
+    yMin = 250;   // 0.25
+    yMax = 750;   // 0.75
+}
+else if (teamSize == 6)
+{
+    yMin = 220;   // 0.22
+    yMax = 780;   // 0.78
+}
+
+int yRange = yMax - yMin;
+
+// TEAM 1 — separated players
+for (int i = 0; i < soloCount; i++)
+{
+    int p = rmGetPlayerOnTeam(1, i);
+    if (i == 0)
+    {
+        p1solo  = p;
+        gP1Solo0 = p;
+    }
+    else if (i == 1)
+    {
+        gP1Solo1 = p;
+    }
+
+/*    int mid = (soloCount - 1) / 2;
+    int dy  = i - mid;
+    float y = 0.5 + (0.15 * dy);*/
+   int dy = (i * 2) - (soloCount - 1);
+   float y = 0.5 + (0.12 * dy);
+
+
+    rmPlacePlayer(p, vectorXZ(0.62, y));
+}
+
+// TEAM 2 — separated players
+for (int i = 0; i < soloCount; i++)
+{
+    int p = rmGetPlayerOnTeam(2, i);
+    if (i == 0)
+    {
+        p2solo  = p;
+        gP2Solo0 = p;
+    }
+    else if (i == 1)
+    {
+        gP2Solo1 = p;
+    }
+
+   int dy = (i * 2) - (soloCount - 1);
+   float y = 0.5 + (0.12 * dy);
+
+    rmPlacePlayer(p, vectorXZ(0.38, y));
+}
+
+        // TEAM 1 — backline
+        for (int i = 0; i < backCount; i++)
+        {
+            int p = rmGetPlayerOnTeam(1, soloCount + i);
+
+            if (i == 0) p1pair0 = p;
+            if (i == 1) p1pair1 = p;
+            if (i == 2) p1pair2 = p;
+            if (i == 3) p1pair3 = p;
+
+            int yInt = (backCount > 1)
+                ? yMin + (yRange * i) / (backCount - 1)
+                : 500;   // center
+
+            rmPlacePlayer(p, vectorXZ(0.15, yInt / 1000.0));
+        }
+
+        // TEAM 2 — backline
+        for (int i = 0; i < backCount; i++)
+        {
+            int p = rmGetPlayerOnTeam(2, soloCount + i);
+
+            if (i == 0) p2pair0 = p;
+            if (i == 1) p2pair1 = p;
+            if (i == 2) p2pair2 = p;
+            if (i == 3) p2pair3 = p;
+
+            int yInt = (backCount > 1)
+                ? yMin + (yRange * i) / (backCount - 1)
+                : 500;
+
+            rmPlacePlayer(p, vectorXZ(0.85, yInt / 1000.0));
+        }
+
+        postPlayerPlacement();
+    }
+}
 
    // Mother Nature's civ.
    rmSetNatureCiv(cCivThor);
@@ -146,40 +306,44 @@ void generate()
    for (int p = 1; p <= cNumberPlayers; p++)
    {
       int numTowers = 4;
-      if (p == p1solo || p == p2solo) {
-         numTowers = 6;
-      }
-   addObjectLocsForPlayer(startingTowerID, true, p, numTowers, cStartingTowerMinDist, cStartingTowerMaxDist, cStartingTowerAvoidanceMeters, cBiasNone, cInAreaPlayer);
+    // Only give 6 towers if game isn't 2v2
+    if (gTeamSize >= 3)
+    {
+        if (p == gP1Solo0 || p == gP2Solo0 || p == gP1Solo1 || p == gP2Solo1)
+        {
+            numTowers = 6;
+        }
+    }
+   addObjectLocsForPlayer(startingTowerID, true, p, numTowers,cStartingTowerMinDist, cStartingTowerMaxDist,cStartingTowerAvoidanceMeters, cBiasNone, cInAreaPlayer);
    }
    generateLocs("starting tower locs");
 
+
+   float lakeSize = (0.035 - (0.005 * gSoloCountPerTeam));
    // 6 tiles each side = 12 tiles total width regardless of map size.
-   int   lakeHalfWidthTiles = 10;
-   float lakeHalfWidth      = rmXTilesToFraction(lakeHalfWidthTiles, false, false);
+   float lakeHalfWidth      = rmXTilesToFraction(10, false, false);
    // Define the lake influence segment coordinates once
    float lakeCenterX = 0.5;
    float lakeBottomY = 0.4;
    float lakeTopY    = 0.6;
 
-   int lakeWidthConstraint = rmCreateBoxConstraint(
-      vectorXZ(0.5 - lakeHalfWidth, 0.0),
-      vectorXZ(0.5 + lakeHalfWidth, 1.0),
-      "lake width box"
-   );
+   int lakeWidthConstraint = rmCreateBoxConstraint(vectorXZ(0.5 - lakeHalfWidth, 0.0),vectorXZ(0.5 + lakeHalfWidth, 1.0),"lake width box");
 
    // Create the lake
    int centerLakeID = rmAreaCreate("center lake");
    rmAreaSetWaterType(centerLakeID, baseWaterID);
    rmAreaSetLoc(centerLakeID, vectorXZ(lakeCenterX, 0.5));
    rmAreaAddInfluenceSegment(centerLakeID, vectorXZ(lakeCenterX, lakeBottomY), vectorXZ(lakeCenterX, lakeTopY));
-   rmAreaSetSize(centerLakeID, 0.03);
+   rmAreaSetSize(centerLakeID, lakeSize);
    rmAreaSetCoherence(centerLakeID, -0.35, 0.0);
    rmAreaSetEdgeSmoothDistance(centerLakeID, 5, false);
    rmAreaAddConstraint(centerLakeID, lakeWidthConstraint);
    rmAreaBuild(centerLakeID);
 
-   // Ponds
-   float pondSize = 0.015;
+int backCount = gTeamSize - gSoloCountPerTeam;
+
+   float pondSize = 0.012 + (0.002 * backCount);
+
    int pondID1 = rmAreaCreate("pond 1");
    rmAreaSetWaterType(pondID1, baseWaterID);
    rmAreaSetSize(pondID1, pondSize); 
@@ -188,7 +352,6 @@ void generate()
    rmAreaSetWaterHeightBlend(pondID1, cFilter5x5Gaussian, 25, 10);
    rmAreaSetLoc(pondID1, vectorXZ(0.02, 0.5)); // Position of the pond
    rmAreaAddInfluenceSegment(pondID1, vectorXZ(0.01, 0.375), vectorXZ(0.01, 0.625)); //start and end points
-//      rmAreaAddConstraint(pondID, avoidPlayerArea);  
 
    int pondID2 = rmAreaCreate("pond 2");
    rmAreaSetWaterType(pondID2, baseWaterID);
@@ -198,7 +361,6 @@ void generate()
    rmAreaSetWaterHeightBlend(pondID2, cFilter5x5Gaussian, 25, 10);
    rmAreaSetLoc(pondID2, vectorXZ(0.98, 0.5)); // Position of the pond
    rmAreaAddInfluenceSegment(pondID2, vectorXZ(0.99, 0.375), vectorXZ(0.99, 0.625)); //start and end points
-//      rmAreaAddConstraint(pondID, avoidPlayerArea);  
 
    rmAreaBuild(pondID1);
    rmAreaBuild(pondID2);   
@@ -206,8 +368,12 @@ void generate()
 
    // Fish.
    int vFishAvoidEdge = createSymmetricBoxConstraint(rmXMetersToFraction(2), rmZMetersToFraction(2));
-   int numCenterFish = max(6, 3 * cNumberTeams * getMapAreaSizeFactor());
-   int numPondFish = max(3, 3 * (cNumberPlayers / cNumberTeams - 1) * getMapAreaSizeFactor());   
+   int numCenterFish = (3 * gSoloCountPerTeam * cNumberTeams * getMapAreaSizeFactor());
+   // Minimum of 3 fish (for 1v1)
+   if (numCenterFish < 3)
+      numCenterFish = 3;
+
+   int numPondFish = (3 * backCount * getMapAreaSizeFactor());
    int fishID = rmObjectDefCreate("fish");
    rmObjectDefAddItem(fishID, cUnitTypePerch, 1, 6.0);
    rmObjectDefAddConstraint(fishID, vFishAvoidEdge);
@@ -288,70 +454,179 @@ rmAreaBuild(centerZoneID);
    int avoidInnerArea = rmCreateAreaDistanceConstraint(innerAreaID, 1.0);
    int forceInInnerArea = rmCreateAreaConstraint(innerAreaID);
 
-float settlementBufferMeters = 18.0;
-float settlementBufferFrac   = rmXMetersToFraction(settlementBufferMeters);
+   float settlementBufferMeters = 18.0;
+   float settlementBufferFrac   = rmXMetersToFraction(settlementBufferMeters);
 
-   if (p2solo != -1)
+   int upperSettlementID = rmObjectDefCreate("upper settlement");
+   rmObjectDefAddItem(upperSettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(upperSettlementID, vDefaultSettlementAvoidEdge);
+   rmObjectDefAddConstraint(upperSettlementID, vDefaultAvoidTowerLOS);
+   rmObjectDefAddConstraint(upperSettlementID, forceUpperZone);   
+   rmObjectDefAddConstraint(upperSettlementID, vDefaultSettlementAvoidSiegeShipRange);
+   rmObjectDefAddConstraint(upperSettlementID, vDefaultAvoidKotH);
+   addObjectDefPlayerLocConstraint(upperSettlementID, 60.0);
+
+   int lowerSettlementID = rmObjectDefCreate("lower settlement");
+   rmObjectDefAddItem(lowerSettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(lowerSettlementID, vDefaultSettlementAvoidEdge);
+   rmObjectDefAddConstraint(lowerSettlementID, vDefaultAvoidTowerLOS);
+   rmObjectDefAddConstraint(lowerSettlementID, forceLowerZone);     
+   rmObjectDefAddConstraint(lowerSettlementID, vDefaultSettlementAvoidSiegeShipRange);
+   rmObjectDefAddConstraint(lowerSettlementID, vDefaultAvoidKotH);
+   addObjectDefPlayerLocConstraint(lowerSettlementID, 60.0);
+
+   int avoidCenterSettlementID = rmObjectDefCreate("non-center settlement");
+   rmObjectDefAddItem(avoidCenterSettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(avoidCenterSettlementID, vDefaultSettlementAvoidEdge);
+   rmObjectDefAddConstraint(avoidCenterSettlementID, vDefaultAvoidTowerLOS);
+   rmObjectDefAddConstraint(avoidCenterSettlementID, avoidInnerArea);
+   rmObjectDefAddConstraint(avoidCenterSettlementID, vDefaultSettlementAvoidSiegeShipRange);
+   rmObjectDefAddConstraint(avoidCenterSettlementID, vDefaultAvoidKotH);
+   addObjectDefPlayerLocConstraint(avoidCenterSettlementID, 60.0);   
+
+   int forwardTeam1SettlementID = rmObjectDefCreate("forward 1 settlement");
+   rmObjectDefAddItem(forwardTeam1SettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(forwardTeam1SettlementID, forceInInnerArea);
+   rmObjectDefAddConstraint(forwardTeam1SettlementID, forceTeam2SoloZone);   
+   rmObjectDefAddConstraint(forwardTeam1SettlementID, vDefaultSettlementAvoidEdge);
+
+   int forwardTeam2SettlementID = rmObjectDefCreate("forward 2 settlement");
+   rmObjectDefAddItem(forwardTeam2SettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(forwardTeam2SettlementID, forceInInnerArea);
+   rmObjectDefAddConstraint(forwardTeam2SettlementID, forceTeam1SoloZone);
+   rmObjectDefAddConstraint(forwardTeam2SettlementID, vDefaultSettlementAvoidEdge);   
+
+   int soloUpperSettlementID = rmObjectDefCreate("p2solo settlement left");
+   rmObjectDefAddItem(soloUpperSettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(soloUpperSettlementID, vDefaultSettlementAvoidEdge);
+   rmObjectDefAddConstraint(soloUpperSettlementID, vDefaultAvoidTowerLOS);
+   rmObjectDefAddConstraint(soloUpperSettlementID, vDefaultSettlementAvoidSiegeShipRange);
+   rmObjectDefAddConstraint(soloUpperSettlementID, forceCenterLake);
+   rmObjectDefAddConstraint(soloUpperSettlementID, forceUpperZone);
+   rmObjectDefAddConstraint(soloUpperSettlementID, avoidCenterX); 
+   rmObjectDefAddConstraint(soloUpperSettlementID, vDefaultAvoidKotH);
+
+   int soloLowerSettlementID = rmObjectDefCreate("p2solo settlement right");
+   rmObjectDefAddItem(soloLowerSettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(soloLowerSettlementID, vDefaultSettlementAvoidEdge);
+   rmObjectDefAddConstraint(soloLowerSettlementID, vDefaultAvoidTowerLOS);
+   rmObjectDefAddConstraint(soloLowerSettlementID, vDefaultSettlementAvoidSiegeShipRange);
+   rmObjectDefAddConstraint(soloLowerSettlementID, forceCenterLake);
+   rmObjectDefAddConstraint(soloLowerSettlementID, forceLowerZone);
+   rmObjectDefAddConstraint(soloLowerSettlementID, avoidCenterX);
+   rmObjectDefAddConstraint(soloLowerSettlementID, vDefaultAvoidKotH);
+
+   // placeholder settlements until I can get 4v4, 5v5, 6v6, etc. working
+   int firstSettlementID = rmObjectDefCreate("first settlement");
+   rmObjectDefAddItem(firstSettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(firstSettlementID, vDefaultSettlementAvoidEdge);
+   rmObjectDefAddConstraint(firstSettlementID, vDefaultAvoidTowerLOS);
+   rmObjectDefAddConstraint(firstSettlementID, vDefaultSettlementAvoidSiegeShipRange);
+   rmObjectDefAddConstraint(firstSettlementID, vDefaultAvoidKotH);
+   addObjectDefPlayerLocConstraint(firstSettlementID, 60.0);
+
+   int secondSettlementID = rmObjectDefCreate("second settlement");
+   rmObjectDefAddItem(secondSettlementID, cUnitTypeSettlement, 1);
+   rmObjectDefAddConstraint(secondSettlementID, vDefaultSettlementAvoidEdge);
+   rmObjectDefAddConstraint(secondSettlementID, vDefaultAvoidTowerLOS);
+   rmObjectDefAddConstraint(secondSettlementID, vDefaultSettlementAvoidSiegeShipRange);
+   rmObjectDefAddConstraint(secondSettlementID, vDefaultAvoidKotH);
+   addObjectDefPlayerLocConstraint(secondSettlementID, 60.0);
+
+
+// 1v1
+   if (gameIs1v1() == true)
    {
-      int p2soloSettlement1 = rmObjectDefCreate("p2solo settlement left");
-      rmObjectDefAddItem(p2soloSettlement1, cUnitTypeSettlement, 1);
-      rmObjectDefAddConstraint(p2soloSettlement1, vDefaultSettlementAvoidEdge);
-      rmObjectDefAddConstraint(p2soloSettlement1, vDefaultAvoidTowerLOS);
-      rmObjectDefAddConstraint(p2soloSettlement1, vDefaultSettlementAvoidSiegeShipRange);
-      rmObjectDefAddConstraint(p2soloSettlement1, forceCenterLake);
-      rmObjectDefAddConstraint(p2soloSettlement1, forceUpperZone);
-      rmObjectDefAddConstraint(p2soloSettlement1, avoidCenterX); 
-      rmObjectDefAddConstraint(p2soloSettlement1, vDefaultAvoidKotH);
-      addObjectLocsForPlayer(p2soloSettlement1, false, p2solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
-
-      int p2soloSettlement2 = rmObjectDefCreate("p2solo settlement right");
-      rmObjectDefAddItem(p2soloSettlement2, cUnitTypeSettlement, 1);
-      rmObjectDefAddConstraint(p2soloSettlement2, vDefaultSettlementAvoidEdge);
-      rmObjectDefAddConstraint(p2soloSettlement2, vDefaultAvoidTowerLOS);
-      rmObjectDefAddConstraint(p2soloSettlement2, vDefaultSettlementAvoidSiegeShipRange);
-      rmObjectDefAddConstraint(p2soloSettlement2, forceCenterLake);
-      rmObjectDefAddConstraint(p2soloSettlement2, forceLowerZone);
-      rmObjectDefAddConstraint(p2soloSettlement2, avoidCenterX);
-      rmObjectDefAddConstraint(p2soloSettlement2, vDefaultAvoidKotH);
-      addObjectLocsForPlayer(p2soloSettlement2, false, p2solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+      addSimObjectLocsPerPlayerPair(upperSettlementID, false, 1, 70.0, 100.0, cSettlementDist1v1, cBiasForward);
+      addSimObjectLocsPerPlayerPair(lowerSettlementID, false, 1, 70.0, 100.0, cSettlementDist1v1, cBiasForward);
    }
-   
-   if (p1solo != -1)
+  else  if (gTeamSize == 2)
    {
-      int p1soloSettlement1 = rmObjectDefCreate("p1solo settlement left");
-      rmObjectDefAddItem(p1soloSettlement1, cUnitTypeSettlement, 1);
-      rmObjectDefAddConstraint(p1soloSettlement1, vDefaultSettlementAvoidEdge);
-      rmObjectDefAddConstraint(p1soloSettlement1, vDefaultAvoidTowerLOS);
-      rmObjectDefAddConstraint(p1soloSettlement1, vDefaultSettlementAvoidSiegeShipRange);
-      rmObjectDefAddConstraint(p1soloSettlement1, forceCenterLake);
-      rmObjectDefAddConstraint(p1soloSettlement1, forceUpperZone);
-      rmObjectDefAddConstraint(p1soloSettlement1, avoidCenterX);
-      rmObjectDefAddConstraint(p1soloSettlement1, vDefaultAvoidKotH);
-      addObjectLocsForPlayer(p1soloSettlement1, false, p1solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+    for (int p = 1; p <= cNumberPlayers; p++)
+    {
+        bool isSolo =
+            (p == gP1Solo0 || p == gP2Solo0 ||
+             p == gP1Solo1 || p == gP2Solo1);
 
-      int p1soloSettlement2 = rmObjectDefCreate("p1solo settlement right");
-      rmObjectDefAddItem(p1soloSettlement2, cUnitTypeSettlement, 1);
-      rmObjectDefAddConstraint(p1soloSettlement2, vDefaultSettlementAvoidEdge);
-      rmObjectDefAddConstraint(p1soloSettlement2, vDefaultAvoidTowerLOS);
-      rmObjectDefAddConstraint(p1soloSettlement2, vDefaultSettlementAvoidSiegeShipRange);
-      rmObjectDefAddConstraint(p1soloSettlement2, forceCenterLake);
-      rmObjectDefAddConstraint(p1soloSettlement2, forceLowerZone);
-      rmObjectDefAddConstraint(p1soloSettlement2, avoidCenterX);
-      rmObjectDefAddConstraint(p1soloSettlement2, vDefaultAvoidKotH);
-      addObjectLocsForPlayer(p1soloSettlement2, false, p1solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
-   }
+        // Only backline players get these
+        if (isSolo == false)
+        {
+            addObjectLocsForPlayer(upperSettlementID, false, p, 1, 70.0, 100.0, 100.0, cBiasForward, cInAreaPlayer);
+            addObjectLocsForPlayer(lowerSettlementID, false, p, 1, 70.0, 100.0, 100.0, cBiasForward, cInAreaPlayer);
+        }
+    }
+      addObjectLocsForPlayer(soloUpperSettlementID, false, p2solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+      addObjectLocsForPlayer(soloLowerSettlementID, false, p2solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+      addObjectLocsForPlayer(soloUpperSettlementID, false, p1solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+      addObjectLocsForPlayer(soloLowerSettlementID, false, p1solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+}
+else if (gTeamSize == 3)
+{
+   // side settlements
+        addObjectLocsForPlayer(avoidCenterSettlementID, false, p1pair0, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaPlayer);
+        addObjectLocsForPlayer(avoidCenterSettlementID, false, p1pair1, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaPlayer);
+        addObjectLocsForPlayer(avoidCenterSettlementID, false, p2pair0, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaPlayer);
+        addObjectLocsForPlayer(avoidCenterSettlementID, false, p2pair1, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaPlayer);
+   // forward
+        addObjectLocsForPlayer(forwardTeam1SettlementID, false, p1pair0, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+        addObjectLocsForPlayer(forwardTeam1SettlementID, false, p1pair1, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+        addObjectLocsForPlayer(forwardTeam2SettlementID, false, p2pair0, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+        addObjectLocsForPlayer(forwardTeam2SettlementID, false, p2pair1, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
 
+    // solo
+      addObjectLocsForPlayer(soloUpperSettlementID, false, p2solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+      addObjectLocsForPlayer(soloLowerSettlementID, false, p2solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+      addObjectLocsForPlayer(soloUpperSettlementID, false, p1solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+      addObjectLocsForPlayer(soloLowerSettlementID, false, p1solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+}
+else
+{
+      addObjectLocsPerPlayer(firstSettlementID, false, 1, 60.0, 90.0, cCloseSettlementDist, cBiasForward, cInAreaPlayer);
+      addObjectLocsPerPlayer(secondSettlementID, false, 1, 100.0, -1.0, cFarSettlementDist, cBiasForwardNotAggressive, cInAreaPlayer);
+} 
+/*
+if (gTeamSize == 4)
+{
+    // Team 1 backline
+    addObjectLocsForPlayer(avoidCenterSettlementID, false, p1pair0, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaTeam);
+    addObjectLocsForPlayer(avoidCenterSettlementID, false, p1pair1, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaTeam);
+    addObjectLocsForPlayer(avoidCenterSettlementID, false, p1pair2, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaTeam);
 
+    // Team 2 backline
+    addObjectLocsForPlayer(avoidCenterSettlementID, false, p2pair0, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaTeam);
+    addObjectLocsForPlayer(avoidCenterSettlementID, false, p2pair1, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaTeam);
+    addObjectLocsForPlayer(avoidCenterSettlementID, false, p2pair2, 1, 80.0, 110.0, 100.0, cBiasForward, cInAreaTeam);
 
-// Team 1 (p1pair0, p1pair1)
+    // Team 1 forward (toward Team 2 solo lane)
+    addObjectLocsForPlayer(forwardTeam1SettlementID, false, p1pair0, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+    addObjectLocsForPlayer(forwardTeam1SettlementID, false, p1pair1, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+    addObjectLocsForPlayer(forwardTeam1SettlementID, false, p1pair2, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+
+    // Team 2 forward (toward Team 1 solo lane)
+    addObjectLocsForPlayer(forwardTeam2SettlementID, false, p2pair0, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+    addObjectLocsForPlayer(forwardTeam2SettlementID, false, p2pair1, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+    addObjectLocsForPlayer(forwardTeam2SettlementID, false, p2pair2, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
+
+    if (p1solo != -1)
+    {
+        addObjectLocsForPlayer(soloUpperSettlementID, false, p1solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+        addObjectLocsForPlayer(soloLowerSettlementID, false, p1solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+    }
+
+    if (p2solo != -1)
+    {
+        addObjectLocsForPlayer(soloUpperSettlementID, false, p2solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+        addObjectLocsForPlayer(soloLowerSettlementID, false, p2solo, 1, 75, 100, 100, cBiasNone, cInAreaPlayer);
+    }
+}*/
+
+/*
+// Team 1 (p1pair0, p1pair1) // original 3v3 spawning - backup testing
 if (p1pair0 != -1)
 {
     // Side settlement (inside inner area)
     int t1p0_side = rmObjectDefCreate("t1p0 side settlement");
     rmObjectDefAddItem(t1p0_side, cUnitTypeSettlement, 1);
-    rmObjectDefAddConstraint(t1p0_side, avoidInnerArea);
-    rmObjectDefAddConstraint(t1p0_side, vDefaultSettlementAvoidEdge);
-    rmObjectDefAddConstraint(t1p0_side, vDefaultAvoidTowerLOS);
     addObjectLocsForPlayer(t1p0_side, false, p1pair0, 1, 80, 110, 110, cBiasForward, cInAreaPlayer);
 
     // Forward settlement (outside inner area)
@@ -416,7 +691,7 @@ if (p2pair1 != -1)
     rmObjectDefAddConstraint(t2p1_forward, forceTeam1SoloZone);
     rmObjectDefAddConstraint(t2p1_forward, vDefaultSettlementAvoidEdge);
     addObjectLocsForPlayer(t2p1_forward, false, p2pair1, 1, 20, 100, 100, cBiasForward, cInAreaPlayer);
-}
+}*/
 
    generateLocs("settlement locs");
 
@@ -448,9 +723,9 @@ if (p2pair1 != -1)
    int startingBerriesID = rmObjectDefCreate("starting berries");
    rmObjectDefAddItem(startingBerriesID, cUnitTypeBerryBush, xsRandInt(4, 6), cBerryClusterRadius);
    rmObjectDefAddConstraint(startingBerriesID, vDefaultAvoidEdge);
-   rmObjectDefAddConstraint(startingBerriesID, vDefaultBerriesAvoidAll);
+//   rmObjectDefAddConstraint(startingBerriesID, vDefaultBerriesAvoidAll);
    rmObjectDefAddConstraint(startingBerriesID, vDefaultBerriesAvoidWater);
-   addObjectLocsPerPlayer(startingBerriesID, false, 1, 2 + cStartingBerriesMinDist, 2 + cStartingBerriesMaxDist, cStartingObjectAvoidanceMeters, cBiasNone, cInAreaPlayer);
+   addObjectLocsPerPlayer(startingBerriesID, false, 1, cStartingBerriesMinDist, 2 + cStartingBerriesMaxDist, cStartingObjectAvoidanceMeters, cBiasNone, cInAreaPlayer);
    
    // Chicken.
    int startingChickenID = rmObjectDefCreate("starting chicken");

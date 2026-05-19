@@ -193,7 +193,6 @@ void generate()
    rmAreaBuild(cliffSE);
 
    // center areas
-
    int outerRingMask = rmAreaCreate("outer ring mask");
    rmAreaSetLoc(outerRingMask, cCenterLoc);
    rmAreaSetSize(outerRingMask, outerTreeSize);
@@ -310,18 +309,13 @@ void generate()
    int centerPondID = rmAreaCreate("center oasis");
    rmAreaSetWaterType(centerPondID, cWaterAztecValleyShallow);
    rmAreaSetLoc(centerPondID, cCenterLoc);
-   if (cNumberPlayers <= 3)
-   {
-      rmAreaSetSize(centerPondID, 0.02);
-   }
-   else
-   {
-      rmAreaSetSize(centerPondID, 0.01);
-   }   
-   rmAreaSetCoherence(centerPondID, 0.2, 0.0);
+   rmAreaSetSize(centerPondID, rmXTilesToFraction(3 + (0.1 * cNumberPlayers), false, false));
+   rmAreaSetWaterHeightBlend(centerPondID,cFilter5x5Box,4,1);
+   rmAreaSetCoherence(centerPondID, 0.5, 0.0);
    rmAreaSetWaterDepth(centerPondID, 0.8);
-   rmAreaSetEdgeSmoothDistance(centerPondID, 5, false);
+   rmAreaSetWaterHeight(centerPondID,4);
    rmAreaBuild(centerPondID);
+
 
    // avoid to keep settlements/gold/etc. out of the central structure
    int avoidInnerRing16   = rmCreateAreaDistanceConstraint(innerForestID, 16.0);
@@ -333,8 +327,7 @@ void generate()
 
    rmAreaBuildAll();
 
-   // ── Town centers at path/grass ring intersection ──────────
-
+   // Town centers at path/grass ring intersection
    // One TC per player at their path angle on the grass ring
    playerTcDefID = rmObjectDefCreate("player ring tc");
    rmObjectDefAddItem(playerTcDefID, cUnitTypeSettlement, 1);
@@ -711,6 +704,7 @@ void generate()
    int fishID = rmObjectDefCreate("global fish");
    rmObjectDefAddItem(fishID, cUnitTypeSalmon, 1, 6.0);
    rmObjectDefAddConstraint(fishID, vDefaultAvoidLand4);
+   rmObjectDefAddConstraint(fishID, rmCreateTypeDistanceConstraint(cUnitTypePlentyVaultKOTH, 0.1));
    rmObjectDefAddConstraint(fishID, rmCreateTypeDistanceConstraint(cUnitTypeSalmon,fishDistMeters));
    rmObjectDefPlaceAnywhere(fishID, 0, 3 * getMapAreaSizeFactor());
 
